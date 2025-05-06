@@ -24,3 +24,14 @@
     background: #7e984d;
     border-color: #616c13;
 }
+
+.title{
+    margin: 0px;
+}
+
+.login{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: large;
+}

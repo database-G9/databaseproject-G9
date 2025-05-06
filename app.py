@@ -34,6 +34,14 @@ def index():
     conn.close()
     return render_template("index.html", novel=novel, category=category, categories=categories)
 
+# 註冊register 登入login
+@app.route('/login')
+def login():
+    return render_template("login.html")
+
+@app.route('/register')
+def register():
+    return render_template("register.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
