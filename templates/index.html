@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>PHP與MySQL建立網頁資料庫</title>
+</head>
+<body>
+   
+   <h1 class="title">小說推薦系統</h1>
+   <a href="{{ url_for('login') }}" class="login">Login</a>
+   <button class="category" onclick="location.href='/?category='">全部</button>
+   {% for c in categories %}
+      <button class="category" onclick="location.href='/?category={{ c }}'">{{ c }}</button>
+   {% endfor %}
+
+   {% if category %}
+      <p>目前顯示分類：<strong>{{ category }}</strong></p>
+   {% endif %}
+
+   <table border="1">
+      <tr>
+         <th>序號</th>
+         <th>書名</th>
+         <th>分類</th>
+      </tr>
+      {% for n in novel %}
+      <tr>
+         <td>{{ n.nIndex }}</td>
+         <td>{{ n.Title }}</td>
+         <td>{{ n.Category }}</td>
+      </tr>
+      {% endfor %}
+   </table>
+
+</body>
+</html>
