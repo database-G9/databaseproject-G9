@@ -11,7 +11,7 @@
         <h1>註冊</h1>
     </div>
     <div class="input">
-        <form method="POST" action="/do_login">
+        <form method="POST" action="/register">
 
             <label>帳號：</label>
             <input type="text" name="username">
@@ -20,10 +20,14 @@
             <input type="password" name="password">
 
             <label>確認密碼：</label>
-            <input type="password" name="password">
+            <input type="confirm_password" name="confirm_password">
 
             <br>
             <button type="submit">註冊</button>
+
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
 
         </form>
     </div>

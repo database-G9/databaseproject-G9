@@ -37,6 +37,7 @@ label {
 
 input[type="text"],
 input[type="password"],
+input[type="confirm_password"],
 button {
     width: 250px;
     padding: 10px;

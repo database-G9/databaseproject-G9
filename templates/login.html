@@ -11,7 +11,7 @@
         <h1>登入</h1>
     </div>
     <div class="input">
-        <form method="POST" action="/do_login">
+        <form method="POST" >
 
             <label>帳號：</label>
             <input type="text" name="username">
@@ -21,6 +21,8 @@
 
             <br>
             <button type="submit">登入</button>
+
+            <p style="color: red;">{{error}}</p>
 
         </form>
     </div>
