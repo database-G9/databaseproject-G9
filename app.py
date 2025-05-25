@@ -1,18 +1,20 @@
-from flask import Flask, request, render_template, redirect, session
+from flask import Flask, request, render_template, redirect, session, url_for
+from recommendation import recommend
 import pymysql
 
 app = Flask(__name__)
-
+app.secret_key = 'KDDRYDRLFYKD4ENE5M'  
 @app.route('/')
 def index():
     
     category = request.args.get('category')
     #用來取得網址中的查詢參數
 
+    # !!! 4個密碼要改 !!!
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='J19940214k?',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -25,14 +27,25 @@ def index():
     categories = [row['Category'] for row in cursor.fetchall()]
 
     # 依據分類撈資料
+    
     if category:
-        cursor.execute("SELECT * FROM novel WHERE Category = %s", (category,))
+        cursor.execute("""
+            SELECT novel.*, author.Name AS AuthorName
+            FROM novel
+            JOIN author ON novel.aIndex = author.aIndex
+            WHERE novel.Category = %s
+        """, (category,))
     else:
-        cursor.execute("SELECT * FROM novel")
+        cursor.execute("""
+            SELECT novel.*, author.Name AS AuthorName
+            FROM novel
+            LEFT JOIN author ON novel.aIndex = author.aIndex
+        """)
 
     novel = cursor.fetchall()
+    username = session.get('username')
     conn.close()
-    return render_template("index.html", novel=novel, category=category, categories=categories)
+    return render_template("index.html", novel=novel, category=category, categories=categories, username=username)
 
 
 # 註冊register 登入login
@@ -45,7 +58,7 @@ def login():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='J19940214k?',
+            password='12345678',
             database='mojoin',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -56,7 +69,9 @@ def login():
         
         if user:
             #print('username=', username , 'password=', password , 'user=', user)
-            return render_template("login.html", error="登入成功")
+            #return render_template("login.html", error="登入成功")
+            session['username'] = username
+            return redirect(url_for('index'))
         else:
             #print('username=', username , 'password=', password , 'user=', user)
             return render_template("login.html", error="帳號或密碼錯誤")
@@ -79,7 +94,7 @@ def register():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='J19940214k?',
+            password='12345678',
             database='mojoin',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -100,6 +115,98 @@ def register():
         conn.close()
 
     return render_template("register.html", message=message)
+
+@app.route('/profile')
+def profile():
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='12345678',
+        database='mojoin',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    cursor = conn.cursor()
+    username = session.get('username')
+    if not username:
+        return redirect(url_for('login'))
+
+    cursor.execute("SELECT LoveRecord FROM userlove WHERE Account = %s", (username,))
+    loverecords = cursor.fetchall()
+
+    if not loverecords:
+        return render_template('profile.html', username=username, novels=[])
+
+    record_ids = tuple(record['LoveRecord'] for record in loverecords)
+
+    if len(record_ids) == 1:
+        query = """
+            SELECT novel.*, author.Name AS AuthorName
+            FROM novel
+            JOIN author ON novel.aIndex = author.aIndex
+            WHERE nIndex = %s
+        """
+        cursor.execute(query, (record_ids[0],))
+    else:
+        placeholders = ', '.join(['%s'] * len(record_ids))
+        query = f"""
+            SELECT novel.*, author.Name AS AuthorName
+            FROM novel
+            JOIN author ON novel.aIndex = author.aIndex
+            WHERE nIndex IN ({placeholders})
+        """
+        cursor.execute(query, record_ids)
+
+    novels = cursor.fetchall()
+    recommended_titles = recommend(username)
+
+    cursor.close()
+    conn.close()
+
+    return render_template('profile.html', username=username, novels=novels, recommended=recommended_titles)
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)  # 清空 session 中的 username
+    return redirect(url_for('index'))  # 回到首頁
+
+@app.route('/novel')
+def novel():
+    nIndex = request.args.get('nIndex')
+    if not nIndex:
+        return "", 400
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='12345678',
+        database='mojoin',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    cursor = conn.cursor()
+
+    query = """
+        SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
+        FROM novel
+        JOIN author ON novel.aIndex = author.aIndex
+        JOIN publish ON novel.pIndex = publish.pIndex
+        WHERE nIndex = %s
+    """
+    cursor.execute(query, (nIndex,))
+    novel = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if not novel:
+        return "找不到這本小說", 404
+
+    return render_template('novel.html', novel=novel)
+
+@app.route('/author')
+def author():
+    session.pop('username', None)  # 清空 session 中的 username
+    return redirect(url_for('index'))  # 回到首頁
 
 if __name__ == '__main__':
     app.run(debug=True)

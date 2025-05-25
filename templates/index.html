@@ -5,35 +5,67 @@
    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>PHP與MySQL建立網頁資料庫</title>
+   <title>index</title>
 </head>
 <body>
+   <div class="title">
+      <img src="../static/logo.png" class="logo"/>
+      <h1>小說推薦系統</h1>
+
+      <input type="text" name="search" class="search" placeholder="Search" />
+
+      <div class="register_login">
+         {% if username %}
+         <a href="{{ url_for('profile') }}" class="login">{{ username }}</a>
+         {% else %}
+         <a href="{{ url_for('register') }}" class="register">註冊</a>
+         <a href="{{ url_for('login') }}" class="login">登入</a>
+         {% endif %}
+      </div>
+      
+   </div>
    
-   <h1 class="title">小說推薦系統</h1>
-   <a href="{{ url_for('login') }}" class="login">Login</a>
-   <button class="category" onclick="location.href='/?category='">全部</button>
-   {% for c in categories %}
-      <button class="category" onclick="location.href='/?category={{ c }}'">{{ c }}</button>
+   <div class="cat">
+      <button class="category" onclick="location.href='/?category='">全部</button>
+      {% for c in categories %}
+         <button class="category" onclick="location.href='/?category={{ c }}'">{{ c }}</button>
+      {% endfor %}
+   </div>
+   
+   <div class="subtitle">
+      {% if category %}
+         <p class="category-icon"> ▎</p> 
+         <p>目前顯示分類：{{ category }}</p>
+      {% endif %}
+   </div>
+   
+   
+
+   {% for n in novel %}
+      <div class="book">
+         {# 書封顏色取決於分類 #}
+         <div class="book-cover {{ n.Category }}">
+            {{ n.Title }}
+         </div>
+         <div class="book-info">
+            <h2>{{ n.Title }}</h2>
+            <a href="{{ url_for('author') }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
+            <div class="information">
+               <p class="Category-icon">{{ n.Category }}</p>
+               <p class="State-icon">{{ n.State }}</p>
+               <a>index:{{n.nIndex}};</a>
+               <div class="readmore_addlove">
+                  <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}" class="readmore">詳情</a>
+                  <a href="#" class="addlove">收藏</a>
+               </div>
+               
+            </div>
+         </div>
+      </div>
    {% endfor %}
 
-   {% if category %}
-      <p>目前顯示分類：<strong>{{ category }}</strong></p>
-   {% endif %}
 
-   <table border="1">
-      <tr>
-         <th>序號</th>
-         <th>書名</th>
-         <th>分類</th>
-      </tr>
-      {% for n in novel %}
-      <tr>
-         <td>{{ n.nIndex }}</td>
-         <td>{{ n.Title }}</td>
-         <td>{{ n.Category }}</td>
-      </tr>
-      {% endfor %}
-   </table>
+  
 
 </body>
 </html>

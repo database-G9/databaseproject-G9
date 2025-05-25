@@ -26,15 +26,15 @@ def analyze_user_preference(tags):
     genres = [classify_genre(tag_list) for tag_list in tags]
     genre_count = Counter(genres)
     total = sum(genre_count.values())
-    sci_fi_count = round(6 * (genre_count["sci-fi"] / total)) if total else 3
-    romance_count = 6 - sci_fi_count
+    sci_fi_count = round(10 * (genre_count["sci-fi"] / total)) if total else 3
+    romance_count = 10 - sci_fi_count
     return {"sci-fi": sci_fi_count, "romance": romance_count}
 
 def recommend(user):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='412410291',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -104,6 +104,10 @@ def recommend(user):
         print('analyze', analyze_result)
         print('sci_fi_books', sci_fi_books[0 : analyze_result['sci-fi']])
         print('romance_books', romance_books[0 : analyze_result['romance']])
+        return (
+            [row['Title'] for row in sci_fi_books[:analyze_result['sci-fi']]] +
+            [row['Title'] for row in romance_books[:analyze_result['romance']]]
+        )
 
     finally:
         conn.close()

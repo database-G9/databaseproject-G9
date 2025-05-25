@@ -8,7 +8,7 @@ try:
     conn = pymysql.connect(
         host='127.0.0.1',
         user='root',
-        password='J19940214k?',
+        password='12345678',
         database='mojoin',
        # port='3306',
     )

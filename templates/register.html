@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>register</title>
 </head>
 <body>
+    <img src="../static/logo.png" class="logo"/>
     <div class="title">
         <h1>註冊</h1>
     </div>
@@ -20,7 +21,7 @@
             <input type="password" name="password">
 
             <label>確認密碼：</label>
-            <input type="confirm_password" name="confirm_password">
+            <input type="password" name="confirm_password">
 
             <br>
             <button type="submit">註冊</button>

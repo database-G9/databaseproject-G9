@@ -1,8 +1,15 @@
+.cat{
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .category {
     border-radius:15px;
     /*border:1px solid #ccc;*/
 	padding:3px 10px;
-    margin: 3px;
+    margin: 5px;
 	margin-bottom:10px;
     font-size: large;
     border: 2px solid transpasrent;
@@ -26,12 +33,206 @@
 }
 
 .title{
-    margin: 0px;
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: #042D00;
+}
+
+.title h1{
+    color: #EEF3B1;
+}
+
+.logo{
+    width: 80px;
+    height: 80px;
+    margin-right: 5px;
+}
+
+.subtitle{
+    display: flex;
+    align-items: center; /* 垂直置中 */
+    
+}
+
+.category-icon{
+    margin-left: 3px;
+    color: #97b631;
+    border-radius: 4px;
+}
+
+.search {
+    margin-left: 50px;
+    border-radius: 12px; /* 可以調整數值，越大越圓 */
+    padding: 6px 12px;
+    border: 1px solid #ccc; /* 可選：讓邊框顯眼一些 */
+    outline: none; /* 點選時不會出現藍色外框 */
+} 
+
+
+.register_login{
+    margin-left: auto;
+    margin-right: 10px;
+    /*font-size: large;*/
+}
+
+.register{
+    margin: 0 10px;
+    /*font-size: large;*/
+    
+    /* 華麗按鈕*/
+    display: inline-block;
+    /*position: relative;*/
+    z-index: 1;
+    /*min-width: 200px;*/
+    background: #EEF3B1;
+    border: 2px solid white;
+    border-radius: 4px;
+    color: #042D00;
+    font-size: 18px;
+    /*text-transform: uppercase;*/
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    transition: 0.5s;
+    padding: 10px 20px;
+}
+
+.register:hover, .register:focus {
+    color: #EEF3B1;
+    background-color: white;
 }
 
 .login{
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: large;
+    margin: 0 10px;
+    /*font-size: large;*/
+    
+    /* 華麗按鈕*/
+    display: inline-block;
+    /*position: relative;*/
+    z-index: 1;
+    /*min-width: 200px;*/
+    background: #042D00;
+    border: 2px solid white;
+    border-radius: 4px;
+    color: white;
+    font-size: 18px;
+    /*text-transform: uppercase;*/
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    transition: 0.5s;
+    padding: 10px 20px;
+}
+
+.login:hover, .login:focus {
+    color: #042D00;
+    background-color: white;
+}
+
+.book {
+    display: flex;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.book-cover {
+    width: 120px;
+    height: auto;
+    margin-left: 10px;
+    margin-right: 20px;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+    word-break: break-word;
+    line-height: 1.2;
+    font-size: 18px;
+
+    box-shadow: 2px 2px 4px rgba(51, 51, 51, 0.6);
+    text-shadow:
+    1px 0px 2px rgba(0,0,0,0.7),
+   -1px 0px 2px rgba(0,0,0,0.7),
+    0px 1px 2px rgba(0,0,0,0.7),
+    0px -1px 2px rgba(0,0,0,0.7),
+    1px 1px 2px rgba(0,0,0,0.7),
+   -1px -1px 2px rgba(0,0,0,0.7),
+    1px -1px 2px rgba(0,0,0,0.7),
+   -1px 1px 2px rgba(0,0,0,0.7);
+}
+
+.book-info {
+    flex-grow: 1;
+}
+
+.book-cover.奇幻科幻 { background-color: #D2EBFF; }
+.book-cover.愛情 { background-color: #FADADD; }
+.book-cover.BL耽美 { background-color: #D8C8F3; }
+.book-cover.GL百合 { background-color: #FFD2B8; }
+.book-cover.輕鬆搞笑 { background-color: #FFFAC8; }
+.book-cover.懸疑推理 { background-color: #BDD0DA; }
+.book-cover.青春校園 { background-color: #D0F0C0; }
+.book-cover.文學寫實 { background-color: #D6CFC4; }
+.book-cover.靈異驚悚 { background-color: #DADADA; }
+.book-cover.武俠玄幻 { background-color: #C0D5CB; }
+
+.information{
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    align-items: center; 
+}
+
+.Category-icon{
+    border: 2px solid #97b631;
+    color: #97b631;
+    padding: 0 3px;
+}
+
+.State-icon{
+    border: 2px solid #042D00;
+    color: #042D00;
+    padding: 0 3px;
+}
+
+.book h2{
+    margin-bottom: 8px;
+}
+
+.readmore_addlove{
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.readmore{
+    border: 2px solid #042D00;
+    color: #042D00;
+    background-color: #EEF3B1;
+    padding: 5px 12px;
+    font-size: 20px;
+    text-decoration: none;
+    border-radius: 10%;
+    margin: 0 10px;
+}
+
+.addlove{
+    border: 2px solid #042D00;
+    color: #042D00;
+    background-color: white;
+    padding: 5px 12px;
+    font-size: 20px;
+    text-decoration: none;
+    border-radius: 10%;
+    margin: 0 10px;
 }

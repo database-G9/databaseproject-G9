@@ -1,0 +1,53 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="title">
+            <h1>{{ username }}</h1>
+            <a href="{{ url_for('index') }}" class="back">BACK</a>
+        </div>
+        
+
+        <h2>收藏的小說</h2>
+        {% if novels %}
+            {% for n in novels %}
+                <div class="book">
+                    <div class="book-cover {{ n.Category }}">
+                        {{ n.Title }}
+                    </div>
+                    <div class="book-info">
+                        <h2>{{ n.Title }}</h2>
+                        <a href="{{ url_for('author') }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
+                        <div class="information">
+                            <p class="Category-icon">{{ n.Category }}</p>
+                            <p class="State-icon">{{ n.State }}</p>
+                            <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}">詳情</a>
+                            <a href="#">收藏</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>你目前尚未收藏任何小說。</p>
+        {% endif %}
+
+
+        <h2>你可能感興趣的小說</h2>
+        {% if recommended %}
+            <ul>
+                {% for title in recommended %}
+                    <li>{{ title }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>目前無推薦結果。</p>
+        {% endif %}
+        <a href="{{ url_for('logout') }}" class="logout">logout</a>
+    </body>
+    </html>
+
