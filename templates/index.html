@@ -33,10 +33,16 @@
    </div>
    
    <div class="subtitle">
-      {% if category %}
-         <p class="category-icon"> ▎</p> 
-         <p>目前顯示分類：{{ category }}</p>
-      {% endif %}
+         {% if author %}
+            <p class="category-icon"> ▎</p> 
+            <p>顯示作者：{{ author }}</p>
+         {% elif category %}
+            <p class="category-icon"> ▎</p> 
+            <p>目前顯示分類：{{ category }}</p>
+         {% elif publisher %}
+            <p class="category-icon"> ▎</p> 
+            <p>目前顯示出版社：{{ publisher }}</p>
+         {% endif %}
    </div>
    
    
@@ -49,16 +55,22 @@
          </div>
          <div class="book-info">
             <h2>{{ n.Title }}</h2>
-            <a href="{{ url_for('author') }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
+            <a href="{{ url_for('index', author=n.AuthorName) }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
             <div class="information">
                <p class="Category-icon">{{ n.Category }}</p>
                <p class="State-icon">{{ n.State }}</p>
-               <a>index:{{n.nIndex}};</a>
                <div class="readmore_addlove">
                   <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}" class="readmore">詳情</a>
-                  <a href="#" class="addlove">收藏</a>
+                  {% if username %}
+                     {% if n.nIndex in is_loved %}
+                     <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">❤️收藏</a>
+                     {% else %} 
+                     <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">🤍收藏</a>
+                     {% endif %}
+                  {% else %}      
+                  <a href="{{ url_for('login') }}" class="addlove">🤍收藏</a>
+                  {% endif %}
                </div>
-               
             </div>
          </div>
       </div>

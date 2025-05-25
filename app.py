@@ -8,6 +8,8 @@ app.secret_key = 'KDDRYDRLFYKD4ENE5M'
 def index():
     
     category = request.args.get('category')
+    author = request.args.get('author')
+    publisher = request.args.get('publisher')
     #用來取得網址中的查詢參數
 
     # !!! 4個密碼要改 !!!
@@ -27,26 +29,48 @@ def index():
     categories = [row['Category'] for row in cursor.fetchall()]
 
     # 依據分類撈資料
-    
-    if category:
+    if author:
         cursor.execute("""
-            SELECT novel.*, author.Name AS AuthorName
+            SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
             FROM novel
             JOIN author ON novel.aIndex = author.aIndex
+            JOIN publish ON novel.pIndex = publish.pIndex
+            WHERE author.Name = %s
+        """, (author,))
+    elif category:
+        cursor.execute("""
+            SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
+            FROM novel
+            JOIN author ON novel.aIndex = author.aIndex
+            JOIN publish ON novel.pIndex = publish.pIndex
             WHERE novel.Category = %s
         """, (category,))
+    elif publisher:
+        cursor.execute("""
+            SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
+            FROM novel
+            JOIN author ON novel.aIndex = author.aIndex
+            JOIN publish ON novel.pIndex = publish.pIndex
+            WHERE publish.Name = %s
+        """, (publisher,))
     else:
         cursor.execute("""
-            SELECT novel.*, author.Name AS AuthorName
+            SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
             FROM novel
             LEFT JOIN author ON novel.aIndex = author.aIndex
+            LEFT JOIN publish ON novel.pIndex = publish.pIndex
         """)
 
     novel = cursor.fetchall()
-    username = session.get('username')
-    conn.close()
-    return render_template("index.html", novel=novel, category=category, categories=categories, username=username)
 
+    username = session.get('username')
+    is_loved = set()
+    if username:
+        cursor.execute("SELECT LoveRecord FROM userlove WHERE Account = %s", (username,))
+        is_loved = {row['LoveRecord'] for row in cursor.fetchall()}
+    
+    conn.close()
+    return render_template("index.html", novel=novel, category=category, categories=categories, author=author, publisher=publisher, username=username, is_loved=is_loved)
 
 # 註冊register 登入login
 @app.route('/login', methods=['GET', 'POST'])
@@ -129,6 +153,8 @@ def profile():
     username = session.get('username')
     if not username:
         return redirect(url_for('login'))
+    
+    
 
     cursor.execute("SELECT LoveRecord FROM userlove WHERE Account = %s", (username,))
     loverecords = cursor.fetchall()
@@ -159,11 +185,15 @@ def profile():
     novels = cursor.fetchall()
     recommended_titles = recommend(username)
 
+    is_loved = set()
+    if username:
+        cursor.execute("SELECT LoveRecord FROM userlove WHERE Account = %s", (username,))
+        is_loved = {row['LoveRecord'] for row in cursor.fetchall()}
+
     cursor.close()
     conn.close()
 
-    return render_template('profile.html', username=username, novels=novels, recommended=recommended_titles)
-
+    return render_template('profile.html', username=username, novels=novels, recommended=recommended_titles, is_loved=is_loved)
 
 @app.route('/logout')
 def logout():
@@ -172,6 +202,8 @@ def logout():
 
 @app.route('/novel')
 def novel():
+    username = session.get('username')
+    
     nIndex = request.args.get('nIndex')
     if not nIndex:
         return "", 400
@@ -195,18 +227,62 @@ def novel():
     cursor.execute(query, (nIndex,))
     novel = cursor.fetchone()
 
+    query2 = """ 
+        SELECT t.Tag
+        FROM noveltag nt
+        JOIN tag t ON nt.tIndex = t.tIndex
+        WHERE nt.nIndex = %s
+        ORDER BY t.tIndex;
+    """
+    cursor.execute(query2, (nIndex,))
+    tags = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM userlove WHERE Account = %s AND LoveRecord = %s", (username, nIndex))
+    is_loved = cursor.fetchone() is not None
+
     cursor.close()
     conn.close()
 
     if not novel:
         return "找不到這本小說", 404
 
-    return render_template('novel.html', novel=novel)
+    return render_template('novel.html', novel=novel, username=username , is_loved=is_loved, tags=tags)
 
 @app.route('/author')
 def author():
     session.pop('username', None)  # 清空 session 中的 username
     return redirect(url_for('index'))  # 回到首頁
+
+@app.route('/addlove/<int:nIndex>')
+def addlove(nIndex):
+    username = session.get('username')
+    if not username:
+        return redirect(url_for('login'))
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='12345678',
+        database='mojoin'
+    )
+    cursor = conn.cursor()
+
+    # 查詢是否已收藏
+    cursor.execute("SELECT * FROM userlove WHERE Account = %s AND LoveRecord = %s", (username, nIndex))
+    exists = cursor.fetchone()
+
+    if exists:
+        # 如果已經收藏 -> 取消收藏
+        cursor.execute("DELETE FROM userlove WHERE Account = %s AND LoveRecord = %s", (username, nIndex))
+    else:
+        # 沒有收藏 -> 加入收藏
+        cursor.execute("INSERT INTO userlove (Account, LoveRecord) VALUES (%s, %s)", (username, nIndex))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(request.referrer or url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)

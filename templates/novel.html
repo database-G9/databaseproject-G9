@@ -7,6 +7,21 @@
     <title>novel</title>
 </head>
 <body>
+    <div class="title">
+      <img src="../static/logo.png" class="logo"/>
+      <h1>小說推薦系統</h1>
+
+      <div class="register_login">
+        {% if username %}
+        <a href="{{ url_for('index') }}" class="register">BACK</a>
+        <a href="{{ url_for('profile') }}" class="login">{{ username }}</a>
+        {% else %}
+        <a href="{{ url_for('index') }}" class="register">返回</a>
+        <a href="{{ url_for('login') }}" class="login">登入</a>
+        {% endif %}
+      </div>
+      
+    </div>
     <div class="onenovel">
 
         <div class="book">
@@ -16,16 +31,24 @@
         
             <div class="book-info">
                 <h2 class="noveltitle">{{ novel.Title }}</h2>
-                <a href="{{ url_for('author') }}" class="AuthorName-icon">{{ novel.AuthorName }}</a>
+                <a href="{{ url_for('index', author=novel.AuthorName) }}" class="AuthorName-icon">{{ novel.AuthorName }}</a>
                 <a class="vertical-icon"> | </a>
-                <a href="#" class="Publish-icon">{{ novel.PublishName }} </a>
+                <a href="{{ url_for('index', publisher=novel.PublishName) }}" class="Publish-icon">{{ novel.PublishName }} </a>
                 
                 <div class="information">
                     <p class="Category-icon">{{ novel.Category }}</p>
                     <p class="State-icon">{{ novel.State }}</p>
                     <div class="readmore_addlove">
                         <a href="{{ novel.Link }}" class="readmore">閱讀</a>
-                        <a href="#" class="addlove">收藏</a>
+                        {% if username %}
+                            {% if is_loved %}
+                            <a href="{{ url_for('addlove', nIndex=novel.nIndex) }}" class="addlove">❤️收藏</a>
+                            {% else %} 
+                            <a href="{{ url_for('addlove', nIndex=novel.nIndex) }}" class="addlove">🤍收藏</a>
+                            {% endif %}
+                        {% else %}      
+                        <a href="{{ url_for('login') }}" class="addlove">🤍收藏</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -48,7 +71,11 @@
                     <h3 class="category-icon"> ▎</h3> 
                     <h3>Tag</h3>
                 </div>
-                <p class="Introduction-icon">{{ novel.Introduction }}</p>
+                <div class="Introduction-icon">
+                    {% for tag in tags %}
+                        <span class="tags-icon">#{{ tag.Tag }}</span>
+                    {% endfor %}
+                </div>
         </div>
 
 

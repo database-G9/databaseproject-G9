@@ -145,7 +145,7 @@
 
 .book-cover {
     width: 120px;
-    height: auto;
+    height: 150px;
     margin-left: 10px;
     margin-right: 20px;
     color: white;
@@ -198,6 +198,10 @@
     border: 2px solid #97b631;
     color: #97b631;
     padding: 0 3px;
+}
+
+.AuthorName-icon {
+    color: #616161;
 }
 
 .State-icon{

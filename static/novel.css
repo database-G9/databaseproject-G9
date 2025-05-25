@@ -1,7 +1,94 @@
+.title{
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: #042D00;
+}
+
+.title h1{
+    color: #EEF3B1;
+}
+
+.logo{
+    width: 80px;
+    height: 80px;
+    margin-right: 5px;
+}
+
+.subtitle{
+    display: flex;
+    align-items: center; /* 垂直置中 */
+    
+}
+
+.register_login{
+    margin-left: auto;
+    margin-right: 10px;
+    /*font-size: large;*/
+}
+
+.register{
+    margin: 0 10px;
+    /*font-size: large;*/
+    
+    /* 華麗按鈕*/
+    display: inline-block;
+    /*position: relative;*/
+    z-index: 1;
+    /*min-width: 200px;*/
+    background: #EEF3B1;
+    border: 2px solid white;
+    border-radius: 4px;
+    color: #042D00;
+    font-size: 18px;
+    /*text-transform: uppercase;*/
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    transition: 0.5s;
+    padding: 10px 20px;
+}
+
+.register:hover, .register:focus {
+    color: #EEF3B1;
+    background-color: white;
+}
+
+.login{
+    margin: 0 10px;
+    /*font-size: large;*/
+    
+    /* 華麗按鈕*/
+    display: inline-block;
+    /*position: relative;*/
+    z-index: 1;
+    /*min-width: 200px;*/
+    background: #042D00;
+    border: 2px solid white;
+    border-radius: 4px;
+    color: white;
+    font-size: 18px;
+    /*text-transform: uppercase;*/
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    transition: 0.5s;
+    padding: 10px 20px;
+}
+
+.login:hover, .login:focus {
+    color: #042D00;
+    background-color: white;
+}
+
 .onenovel{
     border: 1px solid #ccc;
-    padding: 10px 100px;
-    margin: 10px 0;
+    padding: 10px 30px;
+    margin: 10px 70px;
     border-radius: 8px;
     background-color: #f9f9f9;
 }
@@ -71,6 +158,10 @@
     padding: 0 3px;
 }
 
+.AuthorName-icon {
+    color: #616161;
+}
+
 .State-icon{
     border: 2px solid #042D00;
     color: #042D00;
@@ -122,6 +213,10 @@
 .Introduction-icon{
     margin: 0;
     padding: 0 15px;
+}
+
+.tags-icon{
+    margin: 0 5px;
 }
 
 hr{

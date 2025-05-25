@@ -75,6 +75,8 @@ def recommend(user):
                        SELECT N.nIndex,
                               N.aIndex,
                               N.Title,
+                              N.Category,
+                              N.State,
                               GROUP_CONCAT(T.Tag ORDER BY T.Tag SEPARATOR ', ') AS tags
                        FROM novel N
                                 JOIN noveltag NT ON N.nIndex = NT.nIndex
@@ -90,6 +92,8 @@ def recommend(user):
                        SELECT N.nIndex,
                               N.aIndex,
                               N.Title,
+                              N.Category,
+                              N.State,
                               GROUP_CONCAT(T.Tag ORDER BY T.Tag SEPARATOR ', ') AS tags
                        FROM novel N
                                 JOIN noveltag NT ON N.nIndex = NT.nIndex
@@ -104,10 +108,8 @@ def recommend(user):
         print('analyze', analyze_result)
         print('sci_fi_books', sci_fi_books[0 : analyze_result['sci-fi']])
         print('romance_books', romance_books[0 : analyze_result['romance']])
-        return (
-            [row['Title'] for row in sci_fi_books[:analyze_result['sci-fi']]] +
-            [row['Title'] for row in romance_books[:analyze_result['romance']]]
-        )
+        return sci_fi_books[:analyze_result['sci-fi']] + romance_books[:analyze_result['romance']]
+
 
     finally:
         conn.close()
