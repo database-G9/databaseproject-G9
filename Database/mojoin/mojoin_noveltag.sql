@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `mojoin` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `mojoin`;
 -- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
 --
 -- Host: localhost    Database: mojoin
@@ -29,7 +27,7 @@ CREATE TABLE `noveltag` (
   `tIndex` int unsigned NOT NULL,
   PRIMARY KEY (`nIndex`,`tIndex`),
   KEY `tIndex_idx` (`tIndex`),
-  CONSTRAINT `fk_noveltag_novel` FOREIGN KEY (`nIndex`) REFERENCES `novel` (`nIndex`),
+  CONSTRAINT `fk_noveltag_novel` FOREIGN KEY (`nIndex`) REFERENCES `novel` (`nIndex`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_noveltag_tag` FOREIGN KEY (`tIndex`) REFERENCES `tag` (`tIndex`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -53,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-08 23:16:22
+-- Dump completed on 2025-05-26 19:32:23
