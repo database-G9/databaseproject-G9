@@ -12,8 +12,10 @@
       <img src="../static/logo.png" class="logo"/>
       <h1>小說推薦系統</h1>
 
-      <input type="text" name="search" class="search" placeholder="Search" />
-
+      <form method="GET" action="{{ url_for('index') }}" style="display: inline;">
+         <input type="text" name="q" class="search" placeholder="Search" value="{{ request.args.get('q', '') }}" />
+      </form>
+      
       <div class="register_login">
          {% if username %}
          <a href="{{ url_for('profile') }}" class="login">{{ username }}</a>
