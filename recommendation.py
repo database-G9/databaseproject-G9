@@ -1,119 +1,76 @@
 import pymysql
-from collections import Counter
-from difflib import get_close_matches
-import heapq
+import numpy as np
+import pandas as pd
 
-# 可自定義分類的 tags
-SCI_FI_TAGS = ["奇幻", "科幻"]
-ROMANCE_TAGS = ["愛情", "戀愛"]
-
-def classify_genre(tag_list):
-    score = {"sci-fi": 0, "romance": 0}
-    for tag in tag_list:
-        if tag in SCI_FI_TAGS:
-            score["sci-fi"] += 1
-        if tag in ROMANCE_TAGS:
-            score["romance"] += 1
-    if score["sci-fi"] > score["romance"]:
-        return "sci-fi"
-    elif score["romance"] > score["sci-fi"]:
-        return "romance"
-    else:
-        return "romance"  # 平手時預設為 romance（可改）
-
-def analyze_user_preference(tags):
-    # `tags` 是一個 list，裡面每個元素是 tag list，例如 [['科幻', '機器人'], ['戀愛'], ['太空', '純愛']]
-    genres = [classify_genre(tag_list) for tag_list in tags]
-    genre_count = Counter(genres)
-    total = sum(genre_count.values())
-    sci_fi_count = round(10 * (genre_count["sci-fi"] / total)) if total else 3
-    romance_count = 10 - sci_fi_count
-    return {"sci-fi": sci_fi_count, "romance": romance_count}
-
-def recommend(user):
+def recommend(user, top_n=10):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='12345678',
+        password='412410291',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
 
     try:
         cursor = conn.cursor()
-        cursor.execute("""
-                       SELECT Account, GROUP_CONCAT(LoveRecord) AS LoveRecords
-                       FROM userlove
-                       WHERE Account = %s
-                       GROUP BY Account
-                       """, (user,))
+        cursor.execute("SELECT * FROM mojoin.read;")
+        records = cursor.fetchall()
+        df = pd.DataFrame(records)
 
-        records = cursor.fetchone()
-        if not records or not records['LoveRecords']:
-            print('⚠️找不到使用者紀錄')
-            return
+        user_book_matrix = df.pivot_table(index='Account', columns='nIndex', values='History', fill_value=0)
 
-        novel_ids = [int(i.strip()) for i in records['LoveRecords'].split(',')]
+        if user not in user_book_matrix.index:
+            print(f"⚠️ 找不到使用者：{user}")
+            return []
 
-        tags = []
-        for id in novel_ids:
-            cursor.execute("""
-                           SELECT NT.nIndex, GROUP_CONCAT(T.Tag ORDER BY T.Tag SEPARATOR ', ') AS tags
-                           FROM noveltag NT,
-                                tag T
-                           WHERE NT.nIndex = %s
-                             AND T.tIndex = NT.tIndex
-                           GROUP BY NT.nIndex
-                           """, (id,))
-            result = cursor.fetchall()
-            #novel_and_tags.append({result[0]['nIndex'] : result[0]['tags'].split(',')})
-            tags.append(result[0]['tags'].split(','))
+        dot_product_matrix = np.dot(user_book_matrix.values, user_book_matrix.values.T)
+        norms = np.linalg.norm(user_book_matrix.values, axis=1)
+        norm_matrix = np.outer(norms, norms)
+        cosine_similarity_matrix = np.divide(
+            dot_product_matrix,
+            norm_matrix,
+            out=np.zeros_like(dot_product_matrix),
+            where=norm_matrix != 0
+        )
+        cosine_similarity_df = pd.DataFrame(cosine_similarity_matrix, index=user_book_matrix.index, columns=user_book_matrix.index)
 
-        analyze_result = analyze_user_preference(tags)
+        similarities = cosine_similarity_df.loc[user]
+        other_users = user_book_matrix.index.difference([user])
+        user_history = user_book_matrix.loc[user]
+        unread_books = user_history[user_history == 0].index
 
-        cursor.execute("""
-                       SELECT N.nIndex,
-                              N.aIndex,
-                              N.Title,
-                              N.Category,
-                              N.State,
-                              GROUP_CONCAT(T.Tag ORDER BY T.Tag SEPARATOR ', ') AS tags
-                       FROM novel N
-                                JOIN noveltag NT ON N.nIndex = NT.nIndex
-                                JOIN tag T ON NT.tIndex = T.tIndex
-                       GROUP BY N.nIndex
-                       HAVING FIND_IN_SET('奇幻', tags)
-                           OR FIND_IN_SET('科幻', tags)
-                       ORDER BY RAND() LIMIT 100
-                       """)
-        sci_fi_books = cursor.fetchall()
+        predicted_scores = {}
+        for book in unread_books:
+            if book not in user_book_matrix.columns:
+                continue
+            scores = user_book_matrix.loc[other_users, book]
+            sim_scores = similarities[other_users]
+            mask = sim_scores > 0
+            if mask.sum() > 0:
+                weighted_sum = np.dot(scores[mask], sim_scores[mask])
+                if weighted_sum > 0:
+                    predicted_scores[book] = weighted_sum
 
-        cursor.execute("""
-                       SELECT N.nIndex,
-                              N.aIndex,
-                              N.Title,
-                              N.Category,
-                              N.State,
-                              GROUP_CONCAT(T.Tag ORDER BY T.Tag SEPARATOR ', ') AS tags
-                       FROM novel N
-                                JOIN noveltag NT ON N.nIndex = NT.nIndex
-                                JOIN tag T ON NT.tIndex = T.tIndex
-                       WHERE N.Category = '愛情'
-                       GROUP BY N.nIndex
-                       ORDER BY RAND() LIMIT 100
-                       """)
-        romance_books = cursor.fetchall()
+        # 只保留預測分數 > 0 的推薦結果
+        sorted_books = sorted(predicted_scores.items(), key=lambda x: x[1], reverse=True)
+        top_books = sorted_books[:top_n]
 
-        print('tags', tags)
-        print('analyze', analyze_result)
-        print('sci_fi_books', sci_fi_books[0 : analyze_result['sci-fi']])
-        print('romance_books', romance_books[0 : analyze_result['romance']])
-        return sci_fi_books[:analyze_result['sci-fi']] + romance_books[:analyze_result['romance']]
+        # TODO: top_n推薦數量不足，補上熱門書籍+續集(可能有)
 
+        print(f"📄 目前使用者的所有紀錄: \n{df}\n")
+        print(f"📈 餘弦相似度矩陣:\n{cosine_similarity_df}\n")
+        print(f"📚 推薦給使用者「{user}」的書籍：")
+        for book_id, score in top_books:
+            tag = "🔥 探索推薦" if score == 0 else ""
+            print(f"書籍 {book_id}：預測分數 {score:.2f} {tag}")
+
+
+        return [book_id for book_id, _ in top_books]
 
     finally:
         conn.close()
 
 
+
 if __name__ == "__main__":
-    recommend('aaa')
+    print(f"📚book id: {recommend('ddd')}")
