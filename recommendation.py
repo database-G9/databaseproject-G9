@@ -2,7 +2,15 @@ import pymysql
 import numpy as np
 import pandas as pd
 
-def recommend(user, top_n=10):
+def get_book(cursor, book_id):
+    cursor.execute('''
+                    SELECT * FROM novel
+                    WHERE nIndex = %s
+                   ''', (book_id,))
+    return cursor.fetchone()
+
+
+def recommend(user : str, top_n : int = 10):
     conn = pymysql.connect(
         host='localhost',
         user='root',
@@ -51,21 +59,23 @@ def recommend(user, top_n=10):
                 if weighted_sum > 0:
                     predicted_scores[book] = weighted_sum
 
-        # 只保留預測分數 > 0 的推薦結果
         sorted_books = sorted(predicted_scores.items(), key=lambda x: x[1], reverse=True)
         top_books = sorted_books[:top_n]
 
         # TODO: top_n推薦數量不足，補上熱門書籍+續集(可能有)
 
-        print(f"📄 目前使用者的所有紀錄: \n{df}\n")
+        print(f"使用者「{user}」的紀錄: \n{user_history}\n")
+        print(f"📄 使用者「{user}」對未看過書籍的喜好程度:")
+        for book_id, score in predicted_scores.items():
+            print(f"書籍 {book_id}：預測分數 {score:.2f}")
+        print()
+        print(f"📄 所有使用者的紀錄: \n{df}\n")
         print(f"📈 餘弦相似度矩陣:\n{cosine_similarity_df}\n")
         print(f"📚 推薦給使用者「{user}」的書籍：")
         for book_id, score in top_books:
-            tag = "🔥 探索推薦" if score == 0 else ""
-            print(f"書籍 {book_id}：預測分數 {score:.2f} {tag}")
+            print(f"書籍 {book_id}：預測分數 {score:.2f}")
 
-
-        return [book_id for book_id, _ in top_books]
+        return [get_book(cursor, book_id) for book_id, _ in top_books]
 
     finally:
         conn.close()
@@ -73,4 +83,4 @@ def recommend(user, top_n=10):
 
 
 if __name__ == "__main__":
-    print(f"📚book id: {recommend('ddd')}")
+    print(f"📚books: {recommend('aaa')}")
