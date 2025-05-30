@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `mojoin` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `mojoin`;
 -- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
 --
 -- Host: localhost    Database: mojoin
@@ -26,12 +24,10 @@ DROP TABLE IF EXISTS `read`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `read` (
   `Account` char(20) NOT NULL,
-  `nIndex` int unsigned NOT NULL,
+  `nIndex` int NOT NULL,
   `History` int unsigned NOT NULL,
   PRIMARY KEY (`Account`,`nIndex`),
-  UNIQUE KEY `nIndex_UNIQUE` (`nIndex`),
-  CONSTRAINT `Account` FOREIGN KEY (`Account`) REFERENCES `user` (`Account`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `nIndex` FOREIGN KEY (`nIndex`) REFERENCES `novel` (`nIndex`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `Account` FOREIGN KEY (`Account`) REFERENCES `user` (`Account`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -41,7 +37,7 @@ CREATE TABLE `read` (
 
 LOCK TABLES `read` WRITE;
 /*!40000 ALTER TABLE `read` DISABLE KEYS */;
-INSERT INTO `read` VALUES ('aaa',110,1),('aaa',165,4),('aaa',333,2),('aaa',922,3),('aaa',1213,1),('bbb',9,1),('bbb',757,1),('bbb',1111,2);
+INSERT INTO `read` VALUES ('aaa',110,1),('aaa',165,4),('aaa',333,2),('aaa',922,3),('aaa',1213,1),('bbb',9,1),('bbb',757,1),('bbb',1111,2),('ccc',9,3),('ccc',110,0),('ccc',165,3),('ccc',333,1),('ccc',757,0),('ccc',922,4),('ccc',1111,1),('ccc',1213,2);
 /*!40000 ALTER TABLE `read` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-05  1:58:38
+-- Dump completed on 2025-05-30 19:35:48

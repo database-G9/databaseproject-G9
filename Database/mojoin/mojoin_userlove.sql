@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `mojoin` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `mojoin`;
 -- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
 --
 -- Host: localhost    Database: mojoin
@@ -28,7 +26,7 @@ CREATE TABLE `userlove` (
   `Account` char(20) NOT NULL,
   `LoveRecord` int unsigned NOT NULL,
   PRIMARY KEY (`Account`,`LoveRecord`),
-  UNIQUE KEY `LoveRecord_UNIQUE` (`LoveRecord`),
+  KEY `fk_LoveRecord_idx` (`LoveRecord`),
   CONSTRAINT `fk_Account` FOREIGN KEY (`Account`) REFERENCES `user` (`Account`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_LoveRecord` FOREIGN KEY (`LoveRecord`) REFERENCES `novel` (`nIndex`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -40,7 +38,7 @@ CREATE TABLE `userlove` (
 
 LOCK TABLES `userlove` WRITE;
 /*!40000 ALTER TABLE `userlove` DISABLE KEYS */;
-INSERT INTO `userlove` VALUES ('aaa',154),('aaa',922),('bbb',1111);
+INSERT INTO `userlove` VALUES ('ccc',9),('aaa',154),('ccc',165),('aaa',922),('ccc',922),('bbb',1111);
 /*!40000 ALTER TABLE `userlove` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-05  1:58:38
+-- Dump completed on 2025-05-30 19:35:48
