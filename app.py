@@ -333,5 +333,71 @@ def addlove(nIndex):
 
     return redirect(request.referrer or url_for('index'))
 
+
+
+
+
+
+
+
+@app.route('/read/<int:nid>')
+def read_book(nid):
+    username = session.get('username')
+    if not username:
+        return redirect(url_for('login'))  # 未登入導向登入頁
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='12345678',
+        database='mojoin',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    cursor = conn.cursor()
+
+    # 先檢查是否有這筆資料，沒有就插入
+    cursor.execute("""
+        SELECT * FROM `read` WHERE Account = %s AND nIndex = %s
+    """, (username, nid))
+    row = cursor.fetchone()
+
+    if row:
+        # 若有紀錄則更新 History + 1
+        cursor.execute("""
+            UPDATE `read` SET History = History + 1 WHERE Account = %s AND nIndex = %s
+        """, (username, nid))
+    else:
+        # 若無則插入新的資料
+        cursor.execute("""
+            INSERT INTO `read` (Account, nIndex, History) VALUES (%s, %s, 1)
+        """, (username, nid))
+
+    conn.commit()
+    conn.close()
+
+    # 取得該小說的真正閱讀連結 (例如 novel.Link)
+    next_url = request.args.get('next')
+    return redirect(next_url)
+
+def get_novel_url(nid):
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='12345678',
+        database='mojoin',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT Link FROM novel WHERE nIndex = %s", (nid,))
+    result = cursor.fetchone()
+    conn.close()
+
+    if result:
+        return result['Link']
+    return url_for('index')  # 沒查到導回首頁
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
