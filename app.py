@@ -10,6 +10,7 @@ def index():
     category = request.args.get('category')
     author = request.args.get('author')
     publisher = request.args.get('publisher')
+    state = request.args.get('state')
     #用來取得網址中的查詢參數
     q = request.args.get('q')  # 新增搜尋參數
     
@@ -29,6 +30,7 @@ def index():
     # 取得所有不同的分類
     cursor.execute("SELECT DISTINCT Category FROM novel")
     categories = [row['Category'] for row in cursor.fetchall()]
+    keyword = None
 
     # 依據分類撈資料+撈書籍資料需要的表單
     if q:
@@ -41,6 +43,7 @@ def index():
             JOIN publish ON novel.pIndex = publish.pIndex
             WHERE novel.Title LIKE %s OR author.Name LIKE %s OR publish.Name LIKE %s
         """, (keyword, keyword, keyword))
+        keyword = f"{q}"
     elif author:
     #搜尋同作者
         cursor.execute("""
@@ -68,6 +71,15 @@ def index():
             JOIN publish ON novel.pIndex = publish.pIndex
             WHERE publish.Name = %s
         """, (publisher,))
+    elif state:
+    #搜尋同狀態
+        cursor.execute("""
+            SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
+            FROM novel
+            JOIN author ON novel.aIndex = author.aIndex
+            JOIN publish ON novel.pIndex = publish.pIndex
+            WHERE State = %s
+        """, (state,))
     else:
     #顯示全部
         cursor.execute("""
@@ -86,7 +98,7 @@ def index():
         is_loved = {row['LoveRecord'] for row in cursor.fetchall()}
     
     conn.close()
-    return render_template("index.html", novel=novel, category=category, categories=categories, author=author, publisher=publisher, username=username, is_loved=is_loved)
+    return render_template("index.html", novel=novel, category=category, categories=categories, author=author, publisher=publisher, username=username, is_loved=is_loved, keyword=keyword, state=state)
 
 # 註冊register 登入login
 @app.route('/login', methods=['GET', 'POST'])

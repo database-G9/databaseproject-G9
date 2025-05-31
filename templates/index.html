@@ -35,15 +35,21 @@
    </div>
    
    <div class="subtitle">
-         {% if author %}
+         {% if keyword %}
             <p class="category-icon"> ▎</p> 
-            <p>顯示作者：{{ author }}</p>
+            <p>目前顯示之搜尋：{{ keyword }}</p>
+         {% elif author %}
+            <p class="category-icon"> ▎</p> 
+            <p>目前顯示之作者：{{ author }}</p>
          {% elif category %}
             <p class="category-icon"> ▎</p> 
-            <p>目前顯示分類：{{ category }}</p>
+            <p>目前顯示之分類：{{ category }}</p>
          {% elif publisher %}
             <p class="category-icon"> ▎</p> 
-            <p>目前顯示出版社：{{ publisher }}</p>
+            <p>目前顯示之出版社：{{ publisher }}</p>
+         {% elif state %}
+            <p class="category-icon"> ▎</p> 
+            <p>目前顯示之狀態：{{ state }}</p>
          {% endif %}
    </div>
    
@@ -59,8 +65,9 @@
             <h2>{{ n.Title }}</h2>
             <a href="{{ url_for('index', author=n.AuthorName) }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
             <div class="information">
-               <p class="Category-icon">{{ n.Category }}</p>
-               <p class="State-icon">{{ n.State }}</p>
+               <a href='/?category={{ n.Category }}' class="Category-icon">{{ n.Category }}</a>
+               <a href="{{ url_for('index', state=n.State) }}" class="State-icon">{{ n.State }}</a>
+               
                <div class="readmore_addlove">
                   <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}" class="readmore">詳情</a>
                   {% if username %}

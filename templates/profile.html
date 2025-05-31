@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="title">
-            <h1>收藏的小說</h1>
+            <h1>【{{ username }}】收藏的小說</h1>
             <div class="register_login">
                 <a href="{{ url_for('index') }}" class="register">BACK</a>
                 <a href="{{ url_for('logout') }}" class="login">LOGOUT</a>
@@ -28,8 +28,9 @@
                         <h2>{{ n.Title }}</h2>
                         <a href="{{ url_for('index', author=n.AuthorName) }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
                         <div class="information">
-                            <p class="Category-icon">{{ n.Category }}</p>
-                            <p class="State-icon">{{ n.State }}</p>
+                            <a href='/?category={{ n.Category }}' class="Category-icon">{{ n.Category }}</a>
+                            <a href="{{ url_for('index', state=n.State) }}" class="State-icon">{{ n.State }}</a>
+                            
                             <div class="readmore_addlove">
                                 <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}" class="readmore">詳情</a>
                                 {% if username %}

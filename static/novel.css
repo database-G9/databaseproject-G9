@@ -156,16 +156,22 @@
     border: 2px solid #97b631;
     color: #97b631;
     padding: 0 3px;
+    text-decoration: none;
 }
 
 .AuthorName-icon {
     color: #616161;
 }
 
+.Publish-icon {
+    color: #042D00;
+}
+
 .State-icon{
     border: 2px solid #042D00;
     color: #042D00;
     padding: 0 3px;
+    text-decoration: none;
 }
 
 .readmore_addlove{

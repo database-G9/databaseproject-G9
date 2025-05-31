@@ -34,10 +34,10 @@
                 <a href="{{ url_for('index', author=novel.AuthorName) }}" class="AuthorName-icon">{{ novel.AuthorName }}</a>
                 <a class="vertical-icon"> | </a>
                 <a href="{{ url_for('index', publisher=novel.PublishName) }}" class="Publish-icon">{{ novel.PublishName }} </a>
-                
+                <a> {{ novel.nIndex }}</a>
                 <div class="information">
-                    <p class="Category-icon">{{ novel.Category }}</p>
-                    <p class="State-icon">{{ novel.State }}</p>
+                    <a href='/?category={{ novel.Category }}' class="Category-icon">{{ novel.Category }}</a>
+                    <a href="{{ url_for('index', state=novel.State) }}" class="State-icon">{{ novel.State }}</a>
                     <div class="readmore_addlove">
                         <a href="{{ novel.Link }}" class="readmore">閱讀</a>
                         {% if username %}
