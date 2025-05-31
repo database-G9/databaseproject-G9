@@ -334,12 +334,6 @@ def addlove(nIndex):
     return redirect(request.referrer or url_for('index'))
 
 
-
-
-
-
-
-
 @app.route('/read/<int:nid>')
 def read_book(nid):
     username = session.get('username')
@@ -379,22 +373,6 @@ def read_book(nid):
     next_url = request.args.get('next')
     return redirect(next_url)
 
-def get_novel_url(nid):
-    conn = pymysql.connect(
-        host='localhost',
-        user='root',
-        password='12345678',
-        database='mojoin',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    cursor = conn.cursor()
-    cursor.execute("SELECT Link FROM novel WHERE nIndex = %s", (nid,))
-    result = cursor.fetchone()
-    conn.close()
-
-    if result:
-        return result['Link']
-    return url_for('index')  # 沒查到導回首頁
 
 
 
