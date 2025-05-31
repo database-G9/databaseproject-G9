@@ -333,7 +333,6 @@ def addlove(nIndex):
 
     return redirect(request.referrer or url_for('index'))
 
-
 @app.route('/read/<int:nid>')
 def read_book(nid):
     username = session.get('username')
@@ -372,9 +371,6 @@ def read_book(nid):
     # 取得該小說的真正閱讀連結 (例如 novel.Link)
     next_url = request.args.get('next')
     return redirect(next_url)
-
-
-
 
 
 if __name__ == '__main__':
