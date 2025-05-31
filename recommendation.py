@@ -14,7 +14,7 @@ def recommend(user : str, top_n : int = 10):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='412410291',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )

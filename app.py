@@ -18,7 +18,7 @@ def index():
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='123456789',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -30,8 +30,9 @@ def index():
     cursor.execute("SELECT DISTINCT Category FROM novel")
     categories = [row['Category'] for row in cursor.fetchall()]
 
-    # 依據分類撈資料
+    # 依據分類撈資料+撈書籍資料需要的表單
     if q:
+    #上方搜尋欄
         keyword = f"%{q}%"
         cursor.execute("""
             SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
@@ -41,6 +42,7 @@ def index():
             WHERE novel.Title LIKE %s OR author.Name LIKE %s OR publish.Name LIKE %s
         """, (keyword, keyword, keyword))
     elif author:
+    #搜尋同作者
         cursor.execute("""
             SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
             FROM novel
@@ -49,6 +51,7 @@ def index():
             WHERE author.Name = %s
         """, (author,))
     elif category:
+    #搜尋同分類
         cursor.execute("""
             SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
             FROM novel
@@ -57,6 +60,7 @@ def index():
             WHERE novel.Category = %s
         """, (category,))
     elif publisher:
+    #搜尋同出版社
         cursor.execute("""
             SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
             FROM novel
@@ -65,6 +69,7 @@ def index():
             WHERE publish.Name = %s
         """, (publisher,))
     else:
+    #顯示全部
         cursor.execute("""
             SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
             FROM novel
@@ -93,11 +98,12 @@ def login():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='123456789',
+            password='12345678',
             database='mojoin',
             cursorclass=pymysql.cursors.DictCursor
         )
         cursor = conn.cursor()
+        #搜尋是否有和使用者輸入之相同的帳密
         cursor.execute("SELECT * FROM user WHERE Account=%s AND Password=%s", (username, password))
         user = cursor.fetchone() #取出一筆資料
         conn.close()
@@ -105,10 +111,12 @@ def login():
         if user:
             #print('username=', username , 'password=', password , 'user=', user)
             #return render_template("login.html", error="登入成功")
+            #已登入 儲存使用者名稱 返回index
             session['username'] = username
             return redirect(url_for('index'))
         else:
             #print('username=', username , 'password=', password , 'user=', user)
+            #登入失敗 顯示錯誤訊息
             return render_template("login.html", error="帳號或密碼錯誤")
     
     return render_template("login.html")
@@ -129,7 +137,7 @@ def register():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='123456789',
+            password='12345678',
             database='mojoin',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -142,7 +150,7 @@ def register():
         if existing_user:
             message = "帳號已存在，請使用其他帳號。"
         else:
-            # 寫入資料庫
+            # 將新的使用者帳密寫入資料庫
             cursor.execute("INSERT INTO user (Account, password) VALUES (%s, %s)", (username, password))
             conn.commit()
             message = "註冊成功！"
@@ -156,7 +164,7 @@ def profile():
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='123456789',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -166,7 +174,7 @@ def profile():
         return redirect(url_for('login'))
     
     
-
+    #根據使用者名稱搜尋使用者蒐藏之書籍
     cursor.execute("SELECT LoveRecord FROM userlove WHERE Account = %s", (username,))
     loverecords = cursor.fetchall()
 
@@ -175,6 +183,7 @@ def profile():
 
     record_ids = tuple(record['LoveRecord'] for record in loverecords)
 
+    #根據使用者收藏書籍 搜書籍資料
     if len(record_ids) == 1:
         query = """
             SELECT novel.*, author.Name AS AuthorName
@@ -194,10 +203,13 @@ def profile():
         cursor.execute(query, record_ids)
 
     novels = cursor.fetchall()
+
+    #根據演算法 獲得推薦書籍資料
     recommended_titles = recommend(username)
 
     is_loved = set()
     if username:
+        #搜使用者是否蒐藏該書籍(愛心之顯示)
         cursor.execute("SELECT LoveRecord FROM userlove WHERE Account = %s", (username,))
         is_loved = {row['LoveRecord'] for row in cursor.fetchall()}
 
@@ -208,6 +220,7 @@ def profile():
 
 @app.route('/logout')
 def logout():
+    #清空儲存的使用者名稱=登出
     session.pop('username', None)  # 清空 session 中的 username
     return redirect(url_for('index'))  # 回到首頁
 
@@ -215,6 +228,7 @@ def logout():
 def novel():
     username = session.get('username')
     
+    #獲取點擊的書之nIndex
     nIndex = request.args.get('nIndex')
     if not nIndex:
         return "", 400
@@ -222,12 +236,13 @@ def novel():
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='123456789',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
     cursor = conn.cursor()
 
+    #根據nIndex搜該書的書籍資訊(不含tags)
     query = """
         SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
         FROM novel
@@ -240,6 +255,7 @@ def novel():
     if novel and 'Introduction' in novel:
         novel['Introduction'] = novel['Introduction'].replace('\r\n', '\n').replace('\r', '\n')
 
+    #根據nIndex搜該書的書籍資訊(tags)
     query2 = """ 
         SELECT t.Tag
         FROM noveltag nt
@@ -250,6 +266,7 @@ def novel():
     cursor.execute(query2, (nIndex,))
     tags = cursor.fetchall()
 
+    #搜使用者是否蒐藏該書籍(愛心之顯示)
     cursor.execute("SELECT * FROM userlove WHERE Account = %s AND LoveRecord = %s", (username, nIndex))
     is_loved = cursor.fetchone() is not None
 
@@ -261,11 +278,6 @@ def novel():
 
     return render_template('novel.html', novel=novel, username=username , is_loved=is_loved, tags=tags)
 
-@app.route('/author')
-def author():
-    session.pop('username', None)  # 清空 session 中的 username
-    return redirect(url_for('index'))  # 回到首頁
-
 @app.route('/addlove/<int:nIndex>')
 def addlove(nIndex):
     username = session.get('username')
@@ -275,12 +287,12 @@ def addlove(nIndex):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='123456789',
+        password='12345678',
         database='mojoin'
     )
     cursor = conn.cursor()
 
-    # 查詢是否已收藏
+    #搜使用者是否蒐藏該書籍(愛心之顯示)
     cursor.execute("SELECT * FROM userlove WHERE Account = %s AND LoveRecord = %s", (username, nIndex))
     exists = cursor.fetchone()
 
