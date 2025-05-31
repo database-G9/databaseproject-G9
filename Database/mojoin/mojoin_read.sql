@@ -37,7 +37,7 @@ CREATE TABLE `read` (
 
 LOCK TABLES `read` WRITE;
 /*!40000 ALTER TABLE `read` DISABLE KEYS */;
-INSERT INTO `read` VALUES ('aaa',110,1),('aaa',165,4),('aaa',333,2),('aaa',922,3),('aaa',1213,1),('bbb',9,1),('bbb',757,1),('bbb',1111,2),('ccc',9,3),('ccc',110,0),('ccc',165,3),('ccc',333,1),('ccc',757,0),('ccc',922,4),('ccc',1111,1),('ccc',1213,2);
+INSERT INTO `read` VALUES ('aaa',110,1),('aaa',165,4),('aaa',333,2),('aaa',922,3),('aaa',1213,1),('bbb',9,1),('bbb',757,1),('bbb',1111,2),('ccc',9,3),('ccc',110,0),('ccc',165,3),('ccc',333,1),('ccc',757,0),('ccc',922,4),('ccc',1111,1),('ccc',1213,2),('ddd','34','1'),('ddd','76','1'),('ddd','101','1'),('ddd','99','1'),('ddd','104','1'),('ddd','98','1'),('ddd','102','1'),('ddd','125','1'),('ddd','167','1'),('ddd','97','1'),('aaa','34','1');
 /*!40000 ALTER TABLE `read` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

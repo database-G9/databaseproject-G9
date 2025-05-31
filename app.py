@@ -11,6 +11,7 @@ def index():
     author = request.args.get('author')
     publisher = request.args.get('publisher')
     state = request.args.get('state')
+    tag = request.args.get('tag')
     #用來取得網址中的查詢參數
     q = request.args.get('q')  # 新增搜尋參數
     
@@ -80,6 +81,17 @@ def index():
             JOIN publish ON novel.pIndex = publish.pIndex
             WHERE State = %s
         """, (state,))
+    elif tag:
+    #搜尋同狀態
+        cursor.execute("""
+            SELECT novel.*, author.Name AS AuthorName, publish.Name AS PublishName
+            FROM novel
+            JOIN noveltag nt ON nt.nIndex = novel.nIndex
+            JOIN tag t ON t.tIndex = nt.tIndex
+            JOIN author ON novel.aIndex = author.aIndex
+            JOIN publish ON novel.pIndex = publish.pIndex
+            WHERE t.tIndex = nt.tIndex AND nt.nIndex = novel.nIndex AND t.Tag = %s
+        """, (tag,))
     else:
     #顯示全部
         cursor.execute("""
@@ -98,7 +110,7 @@ def index():
         is_loved = {row['LoveRecord'] for row in cursor.fetchall()}
     
     conn.close()
-    return render_template("index.html", novel=novel, category=category, categories=categories, author=author, publisher=publisher, username=username, is_loved=is_loved, keyword=keyword, state=state)
+    return render_template("index.html", novel=novel, category=category, categories=categories, author=author, publisher=publisher, username=username, is_loved=is_loved, keyword=keyword, state=state, tag=tag)
 
 # 註冊register 登入login
 @app.route('/login', methods=['GET', 'POST'])

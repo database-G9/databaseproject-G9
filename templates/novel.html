@@ -34,7 +34,7 @@
                 <a href="{{ url_for('index', author=novel.AuthorName) }}" class="AuthorName-icon">{{ novel.AuthorName }}</a>
                 <a class="vertical-icon"> | </a>
                 <a href="{{ url_for('index', publisher=novel.PublishName) }}" class="Publish-icon">{{ novel.PublishName }} </a>
-                <a> {{ novel.nIndex }}</a>
+                
                 <div class="information">
                     <a href='/?category={{ novel.Category }}' class="Category-icon">{{ novel.Category }}</a>
                     <a href="{{ url_for('index', state=novel.State) }}" class="State-icon">{{ novel.State }}</a>
@@ -73,7 +73,7 @@
                 </div>
                 <div class="Introduction-icon">
                     {% for tag in tags %}
-                        <span class="tags-icon">#{{ tag.Tag }}</span>
+                        <a href="{{ url_for('index', tag=tag.Tag) }}" class="tags-icon">#{{ tag.Tag }}</a>
                     {% endfor %}
                 </div>
         </div>

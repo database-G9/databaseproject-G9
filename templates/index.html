@@ -50,6 +50,9 @@
          {% elif state %}
             <p class="category-icon"> ▎</p> 
             <p>目前顯示之狀態：{{ state }}</p>
+         {% elif tag %}
+            <p class="category-icon"> ▎</p> 
+            <p>目前顯示之標籤：{{ tag }}</p>
          {% endif %}
    </div>
    

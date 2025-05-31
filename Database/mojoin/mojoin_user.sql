@@ -36,7 +36,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('aaa','aaa'),('bbb','bbb'),('ccc','ccc');
+INSERT INTO `user` VALUES ('aaa','aaa'),('bbb','bbb'),('ccc','ccc'),('ddd','ddd');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
