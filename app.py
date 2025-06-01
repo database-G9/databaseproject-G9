@@ -20,7 +20,7 @@ def index():
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='12345678',
+        password='1107',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -122,7 +122,7 @@ def login():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='12345678',
+            password='1107',
             database='mojoin',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -161,7 +161,7 @@ def register():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='12345678',
+            password='1107',
             database='mojoin',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -188,7 +188,7 @@ def profile():
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='12345678',
+        password='1107',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -260,7 +260,7 @@ def novel():
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='12345678',
+        password='1107',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -311,7 +311,7 @@ def addlove(nIndex):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='12345678',
+        password='1107',
         database='mojoin'
     )
     cursor = conn.cursor()
@@ -342,7 +342,7 @@ def read_book(nid):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='12345678',
+        password='1107',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )

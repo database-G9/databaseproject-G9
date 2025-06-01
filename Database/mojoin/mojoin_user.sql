@@ -36,7 +36,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('aaa','aaa'),('bbb','bbb'),('ccc','ccc'),('ddd','ddd');
+INSERT INTO `user` VALUES ('aaa','aaa'),('bbb','bbb\r'),('ccc','ccc'),('ddd','ddd'),('U002','000'),('U003','000'),('U004','000'),('U005','000'),('U006','000'),('U007','000'),('U008','000'),('U009','000'),('U010','000');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-30 19:35:48
+-- Dump completed on 2025-06-01 16:01:04
