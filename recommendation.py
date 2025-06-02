@@ -209,11 +209,10 @@ def tagrecommend(user: str, top_n: int = 10):
         conn.close()
         
 def bookrecommend(book_id: int, top_n: int = 10):
-
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='12345678',
+        password='05101107',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -278,21 +277,28 @@ def bookrecommend(book_id: int, top_n: int = 10):
 
         tag_to_books = {}
         for row in all_tag_data:
+            if int(row['nIndex']) == int(book_id):
+                continue
             tag_to_books.setdefault(row['nIndex'], set()).add(row['tIndex'])
+
+        # 移除本書，避免推薦自己
+        tag_to_books.pop(book_id, None)
 
         # 6. tag 相似度分數
         predicted_scores = {}
         for other_book_id, tag_set in tag_to_books.items():
-            if other_book_id == book_id or other_book_id in related_books:
+            if int(other_book_id) == int(book_id) or other_book_id in related_books:
                 continue
             overlap = len(set(tags) & tag_set)
             if overlap > 0:
                 predicted_scores[other_book_id] = overlap
-
+        # 移除本書，避免推薦自己
+        predicted_scores.pop(book_id, None)
+        
         sorted_books = sorted(predicted_scores.items(), key=lambda x: x[1], reverse=True)
         top_books = []
         for bid, _ in sorted_books:
-            if bid != book_id and bid not in related_books and bid not in top_books:
+            if bid != book_id and bid not in top_books and bid not in related_books:
                 top_books.append(bid)
             if len(top_books) >= (top_n - len(related_books)):
                 break
@@ -311,13 +317,19 @@ def bookrecommend(book_id: int, top_n: int = 10):
             cursor.execute(query, params)
             for row in cursor.fetchall():
                 bid = row['nIndex']
-                if bid != book_id and bid not in top_books:
+                if bid != book_id and bid not in top_books and bid not in related_books:
                     top_books.append(bid)
                 if len(top_books) + len(related_books) >= top_n:
                     break
 
         final_books = [bid for bid in (related_books + top_books) if bid != book_id]
 
+    
+        print("❗目前 book_id:", book_id)
+        print("✅ related_books:", related_books)
+        print("✅ predicted_scores.keys():", list(predicted_scores.keys()))
+        print("✅ top_books:", top_books)
+        print("✅ final_books:", final_books)
         # 8. 顯示推薦結果
         print(f"📘 書籍 {book_id} 的推薦：")
         for i, bid in enumerate(final_books):
@@ -328,6 +340,7 @@ def bookrecommend(book_id: int, top_n: int = 10):
 
     finally:
         conn.close()
+
 
 
 if __name__ == "__main__":
