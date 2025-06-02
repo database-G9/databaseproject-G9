@@ -18,7 +18,7 @@ def recommend(user: str, top_n: int = 10):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='05101107',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -117,14 +117,14 @@ def recommend(user: str, top_n: int = 10):
 
 #若直接執行此檔案，則推薦一次
 #if __name__ == "__main__":
-    print(f"📚books: {recommend('U002')}")
+    #print(f"📚books: {recommend('U002')}")
     
 
 def tagrecommend(user: str, top_n: int = 10):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='05101107',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -213,7 +213,7 @@ def bookrecommend(book_id: int, top_n: int = 10):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='05101107',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )

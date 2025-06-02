@@ -291,3 +291,20 @@
 .book-cover2.文學寫實 { background-color: #D6CFC4; }
 .book-cover2.靈異驚悚 { background-color: #DADADA; }
 .book-cover2.武俠玄幻 { background-color: #C0D5CB; }
+
+.onenovel{
+    padding: 15px 15px;
+    margin: 15px 35px;
+    border-radius: 8px;
+}
+
+.subtitle{
+    display: flex;
+    align-items: center; /* 垂直置中 */
+}
+
+.category-icon{
+    margin-left: 3px;
+    color: #97b631;
+    border-radius: 4px;
+}

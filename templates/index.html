@@ -26,68 +26,68 @@
       </div>
       
    </div>
-   
-   <div class="cat">
-      <button class="category" onclick="location.href='/?category='">全部</button>
-      {% for c in categories %}
-         <button class="category" onclick="location.href='/?category={{ c }}'">{{ c }}</button>
-      {% endfor %}
-   </div>
-   
-   <div class="subtitle">
-         {% if keyword %}
-            <p class="category-icon"> ▎</p> 
-            <p>目前顯示之搜尋：{{ keyword }}</p>
-         {% elif author %}
-            <p class="category-icon"> ▎</p> 
-            <p>目前顯示之作者：{{ author }}</p>
-         {% elif category %}
-            <p class="category-icon"> ▎</p> 
-            <p>目前顯示之分類：{{ category }}</p>
-         {% elif publisher %}
-            <p class="category-icon"> ▎</p> 
-            <p>目前顯示之出版社：{{ publisher }}</p>
-         {% elif state %}
-            <p class="category-icon"> ▎</p> 
-            <p>目前顯示之狀態：{{ state }}</p>
-         {% elif tag %}
-            <p class="category-icon"> ▎</p> 
-            <p>目前顯示之標籤：{{ tag }}</p>
-         {% endif %}
-   </div>
-   
-   
+   <div class="onenovel">
+      <div class="cat">
+         <button class="category" onclick="location.href='/?category='">全部</button>
+         {% for c in categories %}
+            <button class="category" onclick="location.href='/?category={{ c }}'">{{ c }}</button>
+         {% endfor %}
+      </div>
+      
+      <div class="subtitle">
+            {% if keyword %}
+               <h3 class="category-icon"> ▎</h3> 
+               <h3>目前顯示之搜尋：{{ keyword }}</h3>
+            {% elif author %}
+               <h3 class="category-icon"> ▎</h3> 
+               <h3>目前顯示之作者：{{ author }}</h3>
+            {% elif category %}
+               <h3 class="category-icon"> ▎</h3> 
+               <h3>目前顯示之分類：{{ category }}</h3>
+            {% elif publisher %}
+               <h3 class="category-icon"> ▎</h3> 
+               <h3>目前顯示之出版社：{{ publisher }}</h3>
+            {% elif state %}
+               <h3 class="category-icon"> ▎</h3> 
+               <h3>目前顯示之狀態：{{ state }}</h3>
+            {% elif tag %}
+               <h3 class="category-icon"> ▎</h3> 
+               <h3>目前顯示之標籤：{{ tag }}</h3>
+            {% endif %}
+      </div>
+      
+      
 
-   {% for n in novel %}
-      <div class="book">
-         {# 書封顏色取決於分類 #}
-         <div class="book-cover {{ n.Category }}">
-            {{ n.Title }}
-         </div>
-         <div class="book-info">
-            <h2>{{ n.Title }}</h2>
-            <a href="{{ url_for('index', author=n.AuthorName) }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
-            <div class="information">
-               <a href='/?category={{ n.Category }}' class="Category-icon">{{ n.Category }}</a>
-               <a href="{{ url_for('index', state=n.State) }}" class="State-icon">{{ n.State }}</a>
-               
-               <div class="readmore_addlove">
-                  <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}" class="readmore">詳情</a>
-                  {% if username %}
-                     {% if n.nIndex in is_loved %}
-                     <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">❤️收藏</a>
-                     {% else %} 
-                     <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">🤍收藏</a>
+      {% for n in novel %}
+         <div class="book">
+            {# 書封顏色取決於分類 #}
+            <div class="book-cover {{ n.Category }}">
+               {{ n.Title }}
+            </div>
+            <div class="book-info">
+               <h2>{{ n.Title }}</h2>
+               <a href="{{ url_for('index', author=n.AuthorName) }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
+               <div class="information">
+                  <a href='/?category={{ n.Category }}' class="Category-icon">{{ n.Category }}</a>
+                  <a href="{{ url_for('index', state=n.State) }}" class="State-icon">{{ n.State }}</a>
+                  
+                  <div class="readmore_addlove">
+                     <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}" class="readmore">詳情</a>
+                     {% if username %}
+                        {% if n.nIndex in is_loved %}
+                        <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">❤️收藏</a>
+                        {% else %} 
+                        <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">🤍收藏</a>
+                        {% endif %}
+                     {% else %}      
+                     <a href="{{ url_for('login') }}" class="addlove">🤍收藏</a>
                      {% endif %}
-                  {% else %}      
-                  <a href="{{ url_for('login') }}" class="addlove">🤍收藏</a>
-                  {% endif %}
+                  </div>
                </div>
             </div>
          </div>
-      </div>
-   {% endfor %}
-
+      {% endfor %}
+   </div>
 
   
 

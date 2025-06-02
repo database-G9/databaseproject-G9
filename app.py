@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, session, url_for
-from recommendation import recommend
+from recommendation import recommend, bookrecommend
 import pymysql
 
 app = Flask(__name__)
@@ -20,7 +20,7 @@ def index():
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='1107',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -122,7 +122,7 @@ def login():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='1107',
+            password='12345678',
             database='mojoin',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -161,7 +161,7 @@ def register():
         conn = pymysql.connect(
             host='localhost',
             user='root',
-            password='1107',
+            password='12345678',
             database='mojoin',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -188,7 +188,7 @@ def profile():
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='1107',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -260,7 +260,7 @@ def novel():
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='1107',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -290,9 +290,15 @@ def novel():
     cursor.execute(query2, (nIndex,))
     tags = cursor.fetchall()
 
+    recommended_titles = recommend(username)
+    
+
     #搜使用者是否蒐藏該書籍(愛心之顯示)
-    cursor.execute("SELECT * FROM userlove WHERE Account = %s AND LoveRecord = %s", (username, nIndex))
-    is_loved = cursor.fetchone() is not None
+    is_loved = set()
+    if username:
+        #搜使用者是否蒐藏該書籍(愛心之顯示)
+        cursor.execute("SELECT LoveRecord FROM userlove WHERE Account = %s", (username,))
+        is_loved = {row['LoveRecord'] for row in cursor.fetchall()}
 
     cursor.close()
     conn.close()
@@ -300,7 +306,7 @@ def novel():
     if not novel:
         return "找不到這本小說", 404
 
-    return render_template('novel.html', novel=novel, username=username , is_loved=is_loved, tags=tags)
+    return render_template('novel.html', novel=novel, username=username , is_loved=is_loved, tags=tags, recommended=recommended_titles)
 
 @app.route('/addlove/<int:nIndex>')
 def addlove(nIndex):
@@ -311,7 +317,7 @@ def addlove(nIndex):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='1107',
+        password='12345678',
         database='mojoin'
     )
     cursor = conn.cursor()
@@ -342,7 +348,7 @@ def read_book(nid):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='1107',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )

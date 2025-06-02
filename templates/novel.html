@@ -78,9 +78,50 @@
                 </div>
         </div>
 
+        <hr /><br />
 
+        <div class="subtitle">
+            <h3 class="category-icon"> ▎</h3> 
+            <h3>你可能感興趣的小說</h3>
+        </div>
+        {% if recommended %}
+        <div class="novels">
+            {% for n in recommended %}
+                <div class="book2">
+                    
+                    <div class="book-cover2 {{ n.Category }}">
+                    <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}">{{ n.Title }}</a>
+
+                    {% if username %}
+                        {% if n.nIndex in is_loved %}
+                            <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove2">❤️</a>
+                        {% else %} 
+                            <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove2">🤍</a>
+                        {% endif %}
+                    {% else %}      
+                        <a href="{{ url_for('login') }}" class="addlove2">🤍</a>
+                    {% endif %}
+                    </div>
+
+                    <div class="book-info2">
+                        
+                        <div class="information2">
+                            <a href='/?category={{ novel.Category }}' class="Category-icon">{{ n.Category }}</a>
+                            <a href="{{ url_for('index', state=novel.State) }}" class="State-icon">{{ n.State if 'State' in n else '未知' }}</a>
+
+                            
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p>目前沒有推薦的小說。</p>
+        {% endif %}
 
     </div>
+
+    
     
 
     

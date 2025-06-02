@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="title">
-            <h1>【{{ username }}】收藏的小說</h1>
+            <h1>【{{ username }}】</h1>
             <div class="register_login">
                 <a href="{{ url_for('index') }}" class="register">BACK</a>
                 <a href="{{ url_for('logout') }}" class="login">LOGOUT</a>
@@ -16,78 +16,88 @@
             </div>
         </div>
         
+    
+        <div class="onenovel">
 
-        
-        {% if novels %}
-            {% for n in novels %}
-                <div class="book">
-                    <div class="book-cover {{ n.Category }}">
-                        {{ n.Title }}
-                    </div>
-                    <div class="book-info">
-                        <h2>{{ n.Title }}</h2>
-                        <a href="{{ url_for('index', author=n.AuthorName) }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
-                        <div class="information">
-                            <a href='/?category={{ n.Category }}' class="Category-icon">{{ n.Category }}</a>
-                            <a href="{{ url_for('index', state=n.State) }}" class="State-icon">{{ n.State }}</a>
-                            
-                            <div class="readmore_addlove">
-                                <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}" class="readmore">詳情</a>
-                                {% if username %}
-                                    {% if n.nIndex in is_loved %}
-                                    <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">❤️收藏</a>
-                                    {% else %} 
-                                    <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">🤍收藏</a>
+            <div class="subtitle">
+                <h2 class="category-icon"> ▎</h2> 
+                <h2>你收藏的小說</h2>
+            </div>
+
+            {% if novels %}
+                {% for n in novels %}
+                    <div class="book">
+                        <div class="book-cover {{ n.Category }}">
+                            {{ n.Title }}
+                        </div>
+                        <div class="book-info">
+                            <h2>{{ n.Title }}</h2>
+                            <a href="{{ url_for('index', author=n.AuthorName) }}" class="AuthorName-icon">{{ n.AuthorName }}</a>
+                            <div class="information">
+                                <a href='/?category={{ n.Category }}' class="Category-icon">{{ n.Category }}</a>
+                                <a href="{{ url_for('index', state=n.State) }}" class="State-icon">{{ n.State }}</a>
+                                
+                                <div class="readmore_addlove">
+                                    <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}" class="readmore">詳情</a>
+                                    {% if username %}
+                                        {% if n.nIndex in is_loved %}
+                                        <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">❤️收藏</a>
+                                        {% else %} 
+                                        <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove">🤍收藏</a>
+                                        {% endif %}
+                                    {% else %}      
+                                    <a href="{{ url_for('login') }}" class="addlove">🤍收藏</a>
                                     {% endif %}
-                                {% else %}      
-                                <a href="{{ url_for('login') }}" class="addlove">🤍收藏</a>
-                                {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>你目前尚未收藏任何小說。</p>
-        {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>你目前尚未收藏任何小說。</p>
+            {% endif %}
 
-
-        <h2>你可能感興趣的小說</h2>
-        {% if recommended %}
-        <div class="novels">
-            {% for n in recommended %}
-                <div class="book2">
-                    
-                    <div class="book-cover2 {{ n.Category }}">
-                    <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}">{{ n.Title }}</a>
-
-                    {% if username %}
-                        {% if n.nIndex in is_loved %}
-                            <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove2">❤️</a>
-                        {% else %} 
-                            <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove2">🤍</a>
-                        {% endif %}
-                    {% else %}      
-                        <a href="{{ url_for('login') }}" class="addlove2">🤍</a>
-                    {% endif %}
-                    </div>
-
-                    <div class="book-info2">
+            <div class="subtitle">
+                <h2 class="category-icon"> ▎</h2> 
+                <h2>你可能感興趣的小說</h2>
+            </div>
+            
+            {% if recommended %}
+            <div class="novels">
+                {% for n in recommended %}
+                    <div class="book2">
                         
-                        <div class="information2">
-                            <p class="Category-icon">{{ n.Category }}</p>
-                            <p class="State-icon">{{ n.State if 'State' in n else '未知' }}</p>
+                        <div class="book-cover2 {{ n.Category }}">
+                        <a href="{{ url_for('novel') }}?nIndex={{ n.nIndex }}">{{ n.Title }}</a>
 
+                        {% if username %}
+                            {% if n.nIndex in is_loved %}
+                                <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove2">❤️</a>
+                            {% else %} 
+                                <a href="{{ url_for('addlove', nIndex=n.nIndex) }}" class="addlove2">🤍</a>
+                            {% endif %}
+                        {% else %}      
+                            <a href="{{ url_for('login') }}" class="addlove2">🤍</a>
+                        {% endif %}
+                        </div>
+
+                        <div class="book-info2">
                             
+                            <div class="information2">
+                                <a href='/?category={{ n.Category }}' class="Category-icon">{{ n.Category }}</a>
+                                <a href="{{ url_for('index', state=n.State) }}" class="State-icon">{{ n.State if 'State' in n else '未知' }}</a>
+
+                                
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
+            {% else %}
+                <p>目前沒有推薦的小說。</p>
+            {% endif %}
         </div>
-        {% else %}
-            <p>目前沒有推薦的小說。</p>
-        {% endif %}
-        
+
     </body>
     </html>
     
