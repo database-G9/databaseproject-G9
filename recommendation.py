@@ -115,104 +115,13 @@ def recommend(user: str, top_n: int = 10):
         conn.close()
 
 
-#若直接執行此檔案，則推薦一次
-#if __name__ == "__main__":
-    #print(f"📚books: {recommend('U002')}")
-    
-
-def tagrecommend(user: str, top_n: int = 10):
-    conn = pymysql.connect(
-        host='localhost',
-        user='root',
-        password='12345678',
-        database='mojoin',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    try:
-        cursor = conn.cursor()
-
-        # 1. 找出使用者已讀書籍 ID
-        cursor.execute("""
-            SELECT DISTINCT Account,nIndex FROM mojoin.read
-            WHERE Account = %s AND History > 0
-        """, (user,))
-        records = cursor.fetchall()
-        read_books = set(row['nIndex'] for row in records)
-        if not read_books:
-            print(f"⚠️ 使用者「{user}」沒有閱讀紀錄，隨機推薦 {top_n} 本書籍。")
-            cursor.execute("SELECT nIndex FROM novel ORDER BY RAND() LIMIT %s", (top_n,))
-            random_books = [row['nIndex'] for row in cursor.fetchall()]
-            return [get_book(cursor, book_id) for book_id in random_books]
-        
-        # 2. 找出這些書的 tag
-        placeholders = ','.join(['%s'] * len(read_books))
-        cursor.execute(f"""
-            SELECT tIndex FROM noveltag
-            WHERE nIndex IN ({placeholders})
-        """, list(read_books))
-        tags = [row['tIndex'] for row in cursor.fetchall()]
-        if not tags:
-            print(f"⚠️ 沒有找到使用者讀過書籍的 tag，隨機推薦 {top_n} 本書籍。")
-            cursor.execute("SELECT nIndex FROM novel ORDER BY RAND() LIMIT %s", (top_n,))
-            random_books = [row['nIndex'] for row in cursor.fetchall()]
-            return [get_book(cursor, book_id) for book_id in random_books]
-
-        # 3. 統計 tag 頻率（建立使用者的 tag 偏好分數）
-        tag_scores = pd.Series(tags).value_counts().to_dict()
-
-        # 4. 找出所有包含這些 tag 的書，排除已讀書籍
-        cursor.execute("""
-            SELECT nIndex, tindex FROM noveltag
-        """)
-        all_tag_data = cursor.fetchall()
-
-        tag_to_books = {}
-        for row in all_tag_data:
-            tag_to_books.setdefault(row['nIndex'], set()).add(row['tindex'])
-
-        predicted_scores = {}
-        for book_id, tag_set in tag_to_books.items():
-            if book_id in read_books:
-                continue
-            score = sum(tag_scores.get(tag, 0) for tag in tag_set)
-            if score > 0:
-                predicted_scores[book_id] = score
-
-        # 5. 排序推薦書籍
-        sorted_books = sorted(predicted_scores.items(), key=lambda x: x[1], reverse=True)
-        top_books = [book_id for book_id, _ in sorted_books[:top_n]]
-
-        # 7. 若推薦書不足，補上隨機書
-        if len(top_books) < top_n:
-            needed = top_n - len(top_books)
-            excluded_books = read_books.union(set(top_books))
-            placeholders = ','.join(['%s'] * len(excluded_books)) if excluded_books else 'NULL'
-            query = f"""
-                SELECT nIndex FROM novel
-                WHERE nIndex NOT IN ({placeholders})
-                ORDER BY RAND() LIMIT %s
-            """
-            params = list(excluded_books) + [needed] if excluded_books else [needed]
-            cursor.execute(query, params)
-            random_extra = [row['nIndex'] for row in cursor.fetchall()]
-            top_books.extend(random_extra)
-            
-        # 顯示推薦結果
-        print(f"📘 使用者「{user}」根據偏好 tag 推薦：")
-        for book_id, score in sorted_books[:top_n]:
-            print(f"書籍 {book_id}（分數：{score}）")
-
-        # 回傳書籍詳細資料
-        return [get_book(cursor, book_id) for book_id in top_books]
-
-    finally:
-        conn.close()
+##單本推薦
         
 def bookrecommend(book_id: int, top_n: int = 10):
     conn = pymysql.connect(
         host='localhost',
         user='root',
-        password='05101107',
+        password='12345678',
         database='mojoin',
         cursorclass=pymysql.cursors.DictCursor
     )
