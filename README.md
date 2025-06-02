@@ -4,7 +4,7 @@
 **[DEMO影片(未改連結)](https://affinelayer.com/pixsrv/)  | by 資料庫第九組**
 
 
-組員(依學號排列)
+組員(依學號排列)<br>
 [資工2B 412410085 張子頡](https://github.com/jerrychang565)<br>
 [資工2B 412410291 林鈺丞](https://github.com/Yu-Chang314)<br>
 [資工2B 412410929 呂秉諺](https://github.com/Jimmy0510Lu)<br>
