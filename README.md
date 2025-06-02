@@ -23,13 +23,13 @@
 
 5.使用以下指令安裝flask、recommendation、pymysql
 ```bash
-bash pip install flask
+pip install flask
 ```
 ```bash
-bash pip install recommendation
+pip install recommendation
 ```
 ```bash
-bash pip install pymysql
+pip install pymysql
 ```
 
 ## 執行程式
