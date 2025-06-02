@@ -290,7 +290,7 @@ def novel():
     cursor.execute(query2, (nIndex,))
     tags = cursor.fetchall()
 
-    recommended_titles = recommend(username)
+    recommended_titles = bookrecommend(nIndex)
     
 
     #搜使用者是否蒐藏該書籍(愛心之顯示)
