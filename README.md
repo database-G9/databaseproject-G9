@@ -5,12 +5,12 @@
 
 
 組員(依學號排列)
-[資工2B 412410085 張子頡](https://github.com/jerrychang565)
-[資工2B 412410291 林鈺丞](https://github.com/Yu-Chang314)
-[資工2B 412410929 呂秉諺](https://github.com/Jimmy0510Lu)
-[資工2B 412411281 劉奕霈](https://github.com/rainyyy-yyy)
-[資工2B 412411315 張庭瑄](https://github.com/Yui004)
-[資工2B 412411810 金庭聿](https://github.com/jguavak)
+[資工2B 412410085 張子頡](https://github.com/jerrychang565)<br>
+[資工2B 412410291 林鈺丞](https://github.com/Yu-Chang314)<br>
+[資工2B 412410929 呂秉諺](https://github.com/Jimmy0510Lu)<br>
+[資工2B 412411281 劉奕霈](https://github.com/rainyyy-yyy)<br>
+[資工2B 412411315 張庭瑄](https://github.com/Yui004)<br>
+[資工2B 412411810 金庭聿](https://github.com/jguavak)<br>
 
 ## 環境配置
 1.請先確認電腦中有mySQL、Visual Studio Code
