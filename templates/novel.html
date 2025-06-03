@@ -41,7 +41,7 @@
                     <div class="readmore_addlove">
                         <a href="{{ url_for('read_book', nid=novel.nIndex, next=novel.Link) }}" class="readmore">閱讀</a>
                         {% if username %}
-                            {% if is_loved %}
+                            {% if n.nIndex in is_loved %}
                             <a href="{{ url_for('addlove', nIndex=novel.nIndex) }}" class="addlove">❤️收藏</a>
                             {% else %} 
                             <a href="{{ url_for('addlove', nIndex=novel.nIndex) }}" class="addlove">🤍收藏</a>
