@@ -1,7 +1,7 @@
 # 網路小說推薦系統
 
 
-**[DEMO影片(未改連結)](https://affinelayer.com/pixsrv/)  |  [報告簡報](https://www.canva.com/design/DAGo7zJoBQ8/UXp2H5BS_dDbSprvgdpJdQ/edit?utm_content=DAGo7zJoBQ8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)  |  by 資料庫第九組**
+**[DEMO影片](https://drive.google.com/file/d/1Y-YDbeEbeXWEdJQQ3umhC68Bi9VLTmG8/view?usp=sharing)  |  [報告簡報](https://www.canva.com/design/DAGo7zJoBQ8/UXp2H5BS_dDbSprvgdpJdQ/edit?utm_content=DAGo7zJoBQ8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)  |  by 資料庫第九組**
 
 
 組員(依學號排列)<br>
