@@ -35,7 +35,7 @@ pip install pymysql
 ## 執行程式
 1.使用「取代」功能，將**app\.py**與**recommendation\.py**中所有的「12345678」取代為你的mySQL密碼
 
-2.按下「執行python檔」
+2.開啟app\.py檔並按下「執行python檔」
 
 3.前往瀏覽器，輸入「**127.0.0.1:5000**」連到網站
 
