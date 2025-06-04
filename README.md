@@ -31,6 +31,9 @@ pip install recommendation
 ```bash
 pip install pymysql
 ```
+```bash
+pip install numpy
+```
 
 ## 執行程式
 1.使用「取代」功能，將**app\.py**與**recommendation\.py**中所有的「12345678」取代為你的mySQL密碼
