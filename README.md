@@ -4,13 +4,13 @@
 **[DEMO影片](https://drive.google.com/file/d/1Y-YDbeEbeXWEdJQQ3umhC68Bi9VLTmG8/view?usp=sharing)  |  [報告簡報](https://www.canva.com/design/DAGo7zJoBQ8/UXp2H5BS_dDbSprvgdpJdQ/edit?utm_content=DAGo7zJoBQ8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)  |  by 資料庫第九組**
 
 
-組員(依學號排列)<br>
-[資工2B 412410085 張子頡](https://github.com/jerrychang565)<br>
-[資工2B 412410291 林鈺丞](https://github.com/Yu-Chang314)<br>
-[資工2B 412410929 呂秉諺](https://github.com/Jimmy0510Lu)<br>
-[資工2B 412411281 劉奕霈](https://github.com/rainyyy-yyy)<br>
-[資工2B 412411315 張庭瑄](https://github.com/Yui004)<br>
-[資工2B 412411810 金庭聿](https://github.com/jguavak)<br>
+組員<br>
+[jerrychang565](https://github.com/jerrychang565)、
+[Yu-Chang314](https://github.com/Yu-Chang314)、
+[Jimmy0510Lu](https://github.com/Jimmy0510Lu)、
+[rainyyy-yyy](https://github.com/rainyyy-yyy)、
+[Yui004](https://github.com/Yui004)、
+[jguavak](https://github.com/jguavak)<br>
 
 ## 環境配置
 1.請先確認電腦中有mySQL、Visual Studio Code
